@@ -6,10 +6,12 @@ import { FaSun, FaMoon } from "react-icons/fa6";
 import { Link as RouterLink } from "react-router-dom"
 import { AddIcon } from "@chakra-ui/icons";
 import CreatePostModal from "./CreatePostModal";
+import useLogout from "../hooks/useLogout";
 
 const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode()
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isLoading, handleLogout } = useLogout()
 
     return (
         <Flex p={4} alignItems={"center"} borderBottom={"1px solid"} borderColor={colorMode === "light" ? "gray.200" : "gray.dark"}>
@@ -33,7 +35,7 @@ const Header = () => {
                         <FaUser size={20}/>
                     </Box>
                 </Link>
-                <Button size={"md"}>
+                <Button onClick={handleLogout} isLoading={isLoading} size={"md"}>
                     <CiLogout size={20}/>
                 </Button>
                 <Button bg={"none"} onClick={toggleColorMode}>
