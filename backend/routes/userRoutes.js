@@ -5,7 +5,7 @@ import protectRoute from "../middlewares/protectRoute.js"
 const router = express.Router()
 
 router.get("/profile/:query", getUserProfile)
-router.get("/search", searchForUsers)
+router.get("/search", protectRoute, searchForUsers)
 router.put("/follow/:id", protectRoute, followUnfollowUser)
 router.put("/update/:id", protectRoute, updateUserProfile)
 

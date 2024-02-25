@@ -8,7 +8,7 @@ export const createPost = async (req, res) => {
         let { postPic } = req.body
         const userId = req.user._id
 
-        if(!postedBy || !desc) return res.status(400).json({ error: "PostedBy and desc for a post is required." })
+        if(!postedBy || !desc) return res.status(400).json({ error: "Desc for a post is required." })
 
         const user = await User.findById(postedBy)
         if(!user) return res.status(404).json({ error: "User not found." })

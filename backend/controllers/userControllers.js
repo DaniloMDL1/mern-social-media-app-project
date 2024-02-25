@@ -65,7 +65,8 @@ export const updateUserProfile = async (req, res) => {
         user.bio = bio || user.bio
 
         user = await user.save()
-
+        user.password = null
+        
         res.status(200).json(user)
         
     } catch(error) {
