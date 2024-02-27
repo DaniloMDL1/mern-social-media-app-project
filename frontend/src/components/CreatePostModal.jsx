@@ -33,7 +33,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
             }
 
             showToast("Success", "Post is created successfully.", "success")
-            setPosts([...posts, data])
+            setPosts([data, ...posts])
             onClose()
             setDesc("")
             setImgUrl(null)

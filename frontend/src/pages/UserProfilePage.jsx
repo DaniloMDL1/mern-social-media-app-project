@@ -3,16 +3,21 @@ import Post from "../components/Post"
 import UserProfileHeader from "../components/UserProfileHeader"
 import { useEffect, useState } from "react"
 import useShowToast from "../hooks/useShowToast"
-import { Flex, Spinner } from "@chakra-ui/react"
+import { Flex, Spinner, Text } from "@chakra-ui/react"
+import { useRecoilState } from "recoil"
+import postsAtom from "../atoms/postsAtom"
 
 const UserProfilePage = () => {
   const { username } = useParams()
   const [isUserProfileLoading, setIsUserProfileLoading] = useState(true)
+  const [isUserPostsLoading, setIsUserPostsLoading] = useState(true)
   const [userProfile, setUserProfile] = useState(null)
   const showToast = useShowToast()
+  const [posts, setPosts] = useRecoilState(postsAtom)
 
   useEffect(() => {
     const getUserProfile = async () => {
+      setPosts([])
       try {
         const res = await fetch(`/api/users/profile/${username}`)
         const data = await res.json()
@@ -31,7 +36,28 @@ const UserProfilePage = () => {
       }
     }
 
+    const getUserPosts = async () => {
+      try {
+        const res = await fetch(`/api/posts/user/${username}`)
+        const data = await res.json()
+
+        if(data.error) {
+          showToast("Error", data.error, "error")
+          return
+        }
+
+        console.log(data)
+        setPosts(data)
+        
+      } catch(error) {
+        showToast("Error", error.message, "error")
+      } finally {
+        setIsUserPostsLoading(false)
+      }
+    }
+
     getUserProfile()
+    getUserPosts()
   }, [username, showToast])
 
   if(!userProfile && !isUserProfileLoading) {
@@ -53,9 +79,21 @@ const UserProfilePage = () => {
   return (
     <>
       <UserProfileHeader userProfile={userProfile} setUserProfile={setUserProfile}/>
-      <Post />
-      <Post />
-      <Post />
+      {isUserPostsLoading && (
+        <Flex justifyContent={"center"} mt={5}>
+          <Spinner size={"lg"}/>
+        </Flex>
+      )}
+
+      {!isUserPostsLoading && posts.length === 0 && (
+        <Flex justifyContent={"center"} mt={5}>
+          <Text>No posts for now.</Text>
+        </Flex>
+      )}
+
+      {posts.map((post) => (
+        <Post key={post._id} post={post}/>
+      ))}
     </>
   )
 }

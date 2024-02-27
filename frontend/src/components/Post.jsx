@@ -2,24 +2,38 @@ import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react"
 import Actions from "./Actions"
 import { Link } from "react-router-dom"
 
-const Post = () => {
+const Post = ({ post }) => {
 
     return (
         <Box p={4} mb={4}>
             <Flex justifyContent={"space-between"} alignItems={"center"} px={1}>
                 <Link to={`/profile/asdasdad`}>
                     <Flex alignItems={"center"} gap={3}>
-                        <Avatar src={"https://bit.ly/sage-adebayo"} size={"md"}/>
-                        <Text fontSize={"sm"}>yangyang12</Text>
+                        <Avatar src={post.postedBy?.profilePic} size={"md"}/>
+                        <Text fontSize={"sm"}>{post.postedBy?.username}</Text>
                     </Flex>
                 </Link>
                 <Text fontSize={"sm"}>2 days ago</Text>
             </Flex>
-            <Link to={`/post/asdasd`}>
-                <Box borderRadius={"6px"} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"} mt={3}>
-                    <Image src="https://m.media-amazon.com/images/M/MV5BM2YwYTkwNjItNGQzNy00MWE1LWE1M2ItOTMzOGI1OWQyYjA0XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_FMjpg_UX1000_.jpg"/>
-                </Box>
-            </Link>
+            {post.postPic ? (
+                <>
+                    <Box py={2} px={1}>
+                        {post.desc}
+                    </Box>
+                    <Link to={`/post/${post._id}`}>
+                        <Box borderRadius={"6px"} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"} mt={3}>
+                            <Image src={post.postPic}/>
+                        </Box>
+                    </Link>
+                </>
+            ) : (
+                <Link to={`/post/${post._id}`}>
+                    <Box py={2} px={1}>
+                            {post.desc}
+                    </Box>
+                </Link>
+            )}
+            
             <Actions />
         </Box>
     )
