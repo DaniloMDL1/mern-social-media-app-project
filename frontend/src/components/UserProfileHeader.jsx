@@ -13,6 +13,10 @@ const UserProfileHeader = ({ userProfile, setUserProfile }) => {
     const [isFollowing, setIsFollowing] = useState(userProfile.followers.includes(user?._id))
 
     const handleFollowUnfollow = async () => {
+        if(!user) {
+            showToast("Error", "You must be logged in to follow or unfollow.", "error")
+            return
+        }
         setIsLoading(true)
         try {
             const res = await fetch(`/api/users/follow/${userProfile._id}`, {

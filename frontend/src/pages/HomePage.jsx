@@ -22,7 +22,6 @@ const HomePage = () => {
           return
         }
 
-        console.log(data)
         setPosts(data)
         
       } catch(error) {
@@ -33,7 +32,7 @@ const HomePage = () => {
     }
 
     getFeedPosts()
-  }, [])
+  }, [showToast, setPosts])
 
   return (
     <>
@@ -45,7 +44,7 @@ const HomePage = () => {
 
       {!isFeedPostsLoading && posts.length === 0 && (
         <Flex justifyContent={"center"} mt={5}>
-          <Text>Follow someone to see their posts.</Text>
+          <Text fontSize={"lg"}>Follow someone to see their posts.</Text>
         </Flex>
       )}
 

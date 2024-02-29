@@ -3,7 +3,7 @@ import SearchUsersInput from "./SearchUsersInput"
 import { CiLogout } from "react-icons/ci"
 import { FaUser } from "react-icons/fa"
 import { FaSun, FaMoon } from "react-icons/fa6";
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useLocation } from "react-router-dom"
 import { AddIcon } from "@chakra-ui/icons";
 import CreatePostModal from "./CreatePostModal";
 import useLogout from "../hooks/useLogout";
@@ -15,6 +15,7 @@ const Header = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isLoading, handleLogout } = useLogout()
     const user = useRecoilValue(userAtom)
+    const { pathname } = useLocation()
 
     return (
         <>
@@ -25,10 +26,12 @@ const Header = () => {
                             <Link as={RouterLink} to={"/"} _hover={{ color: "blue.500"}}>
                                 <Text fontSize={"2xl"} fontWeight={"semibold"}>SocialMediaApp</Text>
                             </Link>
-                            <Button onClick={onOpen} size={"md"}>
-                                <AddIcon />
-                                <CreatePostModal isOpen={isOpen} onClose={onClose}/>
-                            </Button>
+                            {pathname === `/profile/${user.username}` && (
+                                <Button onClick={onOpen} size={"md"}>
+                                    <AddIcon />
+                                    <CreatePostModal isOpen={isOpen} onClose={onClose}/>
+                                </Button>
+                            )}
                         </Flex>
                     </Box>
                     <Box flex={0.4} display={"flex"} justifyContent={"center"}>

@@ -17,7 +17,6 @@ const UserProfilePage = () => {
 
   useEffect(() => {
     const getUserProfile = async () => {
-      setPosts([])
       try {
         const res = await fetch(`/api/users/profile/${username}`)
         const data = await res.json()
@@ -37,6 +36,7 @@ const UserProfilePage = () => {
     }
 
     const getUserPosts = async () => {
+      setPosts([])
       try {
         const res = await fetch(`/api/posts/user/${username}`)
         const data = await res.json()
@@ -46,7 +46,6 @@ const UserProfilePage = () => {
           return
         }
 
-        console.log(data)
         setPosts(data)
         
       } catch(error) {
@@ -63,7 +62,7 @@ const UserProfilePage = () => {
   if(!userProfile && !isUserProfileLoading) {
     return (
       <Flex justifyContent={"center"}>
-        <Spinner size={"lg"}/>
+        <Text fontSize={"lg"}>User Not Found.</Text>
       </Flex>
     )
   }
