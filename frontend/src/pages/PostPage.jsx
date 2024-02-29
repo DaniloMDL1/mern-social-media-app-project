@@ -14,6 +14,7 @@ const PostPage = () => {
   const showToast = useShowToast()
   const [isPostLoading, setIsPostLoading] = useState(true)
   const [isCommentsLoading, setIsCommentsLoading] = useState(true)
+  const [postUser, setPostUser] = useState(null)
   const [posts, setPosts] = useRecoilState(postsAtom)
   const [comments, setComments] = useRecoilState(commentsAtom)
   const currentPost = posts[0]
@@ -61,8 +62,27 @@ const PostPage = () => {
       }
     }
 
+    const getUserProfile = async () => {
+      try {
+          const res = await fetch(`/api/users/profile/${currentPost.postedBy}`)
+          const data = await res.json()
+
+          if(data.error) {
+              showToast("Error", data.error, "error")
+              return
+          }
+
+          setPostUser(data)
+          
+      } catch(error) {
+          showToast("Error", error.message, "error")
+          setPostUser(null)
+      } 
+    }
+
+    getUserProfile()
     getPostComments()
-  }, [id])
+  }, [id, currentPost?.postedBy])
 
   if(!isPostLoading && !currentPost) {
     return (
@@ -80,13 +100,15 @@ const PostPage = () => {
     )
   }
 
+  if(!postUser) return null
+
   return (
     <Box p={4} mb={4}>
       <Flex justifyContent={"space-between"} alignItems={"center"} px={1}>
-          <Link to={`/profile/${currentPost.postedBy?.username}`}>
+          <Link to={`/profile/${postUser.username}`}>
               <Flex alignItems={"center"} gap={3}>
-                  <Avatar src={currentPost.postedBy?.profilePic} size={"md"}/>
-                  <Text fontSize={"sm"}>{currentPost.postedBy?.username}</Text>
+                  <Avatar src={postUser.profilePic} size={"md"}/>
+                  <Text fontSize={"sm"}>{postUser.username}</Text>
               </Flex>
           </Link>
           <Text fontSize={"sm"}>{formatDistanceToNow(new Date(currentPost.createdAt))} ago</Text>

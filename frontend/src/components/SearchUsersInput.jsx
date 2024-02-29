@@ -48,7 +48,7 @@ const SearchUsersInput = () => {
       </form>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"}>
+        <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"} h={"340px"} overflow={"auto"}>
           <ModalHeader>Users</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

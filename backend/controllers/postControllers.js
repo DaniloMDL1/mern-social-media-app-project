@@ -25,6 +25,7 @@ export const createPost = async (req, res) => {
             postPic,
             postedBy
         })
+
         const savedPost = await newPost.save()
         res.status(201).json(savedPost)
         
@@ -87,10 +88,7 @@ export const getPost = async (req, res) => {
     try {
         const { id } = req.params
 
-        const post = await Post.findById(id).populate({
-            path: "postedBy",
-            select: "username profilePic"
-        })
+        const post = await Post.findById(id)
         if(!post) return res.status(404).json({ error: "Post not found." })
 
         res.status(200).json(post)
@@ -108,10 +106,7 @@ export const getUserPosts = async (req, res) => {
         const user = await User.findOne({ username })
         if(!user) return res.status(404).json({ error: "User not found." })
 
-        const posts = await Post.find({ postedBy: user._id }).populate({
-            path: "postedBy",
-            select: "username profilePic"
-        }).sort({ createdAt: -1 })
+        const posts = await Post.find({ postedBy: user._id }).sort({ createdAt: -1 })
         
         res.status(200).json(posts)
         
@@ -130,10 +125,7 @@ export const getFeedPosts = async (req, res) => {
 
         const following = user.following
 
-        const posts = await Post.find({ postedBy: { $in: following }}).populate({
-            path: "postedBy",
-            select: "username profilePic"
-        }).sort({ createdAt: -1 })
+        const posts = await Post.find({ postedBy: { $in: following }}).sort({ createdAt: -1 })
 
         res.status(200).json(posts)
         

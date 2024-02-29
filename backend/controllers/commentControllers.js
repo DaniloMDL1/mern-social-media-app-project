@@ -55,10 +55,7 @@ export const getPostComments = async (req, res) => {
         const post = await Post.findById(id)
         if(!post) return res.status(404).json({ error: "Post not found." })
 
-        const comments = await Comment.find({ postId: id }).populate({
-            path: "postedBy",
-            select: "username profilePic"
-        }).sort({ createdAt: -1 })
+        const comments = await Comment.find({ postId: id }).sort({ createdAt: -1 })
 
         res.status(200).json(comments)
         
