@@ -64,15 +64,18 @@ const PostPage = () => {
 
     const getUserProfile = async () => {
       try {
-          const res = await fetch(`/api/users/profile/${currentPost.postedBy}`)
-          const data = await res.json()
+        if(!currentPost) {
+          return
+        }
+        const res = await fetch(`/api/users/profile/${currentPost.postedBy}`)
+        const data = await res.json()
 
-          if(data.error) {
-              showToast("Error", data.error, "error")
-              return
-          }
+        if(data.error) {
+            showToast("Error", data.error, "error")
+            return
+        }
 
-          setPostUser(data)
+        setPostUser(data)
           
       } catch(error) {
           showToast("Error", error.message, "error")
@@ -80,9 +83,11 @@ const PostPage = () => {
       } 
     }
 
-    getUserProfile()
-    getPostComments()
-  }, [id, currentPost?.postedBy])
+    if(currentPost) {
+      getUserProfile()
+      getPostComments()
+    }
+  }, [id, currentPost])
 
   if(!isPostLoading && !currentPost) {
     return (

@@ -1,4 +1,4 @@
-import { Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useColorMode } from "@chakra-ui/react"
 import { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import userAtom from "../atoms/userAtom"
@@ -11,6 +11,7 @@ const CreateCommentModal = ({ isOpen, onClose, post }) => {
   const user = useRecoilValue(userAtom)
   const showToast = useShowToast()
   const [comments, setComments] = useRecoilState(commentsAtom)
+  const { colorMode, toggleColorMode } = useColorMode()
 
   const handleCreateComment = async () => {
     if(!user) {
@@ -46,7 +47,7 @@ const CreateCommentModal = ({ isOpen, onClose, post }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={"gray.dark"}>
+        <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"} width={{ base: "340px", md: "380px" }}>
           <ModalHeader>Create Comment</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

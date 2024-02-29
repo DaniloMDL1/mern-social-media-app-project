@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Stack, Avatar, Center } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Stack, Avatar, Center, useColorMode } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import usePreviewImg from '../hooks/usePreviewImg'
 import { useRecoilState } from 'recoil'
@@ -9,6 +9,7 @@ const UpdateUserProfilePage = () => {
   const [user, setUser] = useRecoilState(userAtom)
   const [isLoading, setIsLoading] = useState(false)
   const showToast = useShowToast()
+  const { colorMode, toggleColorMode } = useColorMode()
   const picRef = useRef(null)
   const [inputs, setInputs] = useState({
     fullName: user.fullName,
@@ -51,7 +52,7 @@ const UpdateUserProfilePage = () => {
         spacing={4}
         w={'full'}
         maxW={'md'}
-        bg={"gray.dark"}
+        bg={colorMode === "light" ? "white" : "gray.dark"}
         rounded={'xl'}
         boxShadow={'lg'}
         p={6}

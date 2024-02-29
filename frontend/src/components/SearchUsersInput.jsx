@@ -48,10 +48,15 @@ const SearchUsersInput = () => {
       </form>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"} h={"340px"} overflow={"auto"}>
+        <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"} width={{ base: "340px", md: "380px" }} h={"340px"} overflow={"auto"}>
           <ModalHeader>Users</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {users.length === 0 && (
+              <Flex justifyContent={"center"}>
+                <Text fontSize={"lg"}>Users not found.</Text>
+              </Flex>
+            )}
             {users.map((user) => (
               <Link key={user._id} to={`/profile/${user.username}`} onClick={onClose}>
                 <Flex _hover={{ bg: colorMode === "light" ? "gray.100" : "whiteAlpha.200"}} rounded={"lg"} p={4} alignItems={"center"} gap={4}>

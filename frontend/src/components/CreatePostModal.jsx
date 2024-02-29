@@ -49,7 +49,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"}>
+            <ModalContent bg={colorMode === "light" ? "white" : "gray.dark"} width={{ base: "340px", md: "380px" }}>
             <ModalHeader>Create Post</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
