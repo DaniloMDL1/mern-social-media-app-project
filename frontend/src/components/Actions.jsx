@@ -16,8 +16,6 @@ const Actions = ({ post }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const showToast = useShowToast()
     const [posts, setPosts] = useRecoilState(postsAtom)
-    const comments = useRecoilValue(commentsAtom)
-    const postComments = comments.filter((comment) => comment.postId === post._id)
 
     const handleLikeUnlikePost = async () => {
         if(!user) {
@@ -80,8 +78,6 @@ const Actions = ({ post }) => {
                 <CreateCommentModal isOpen={isOpen} onClose={onClose} post={post}/>
             </Flex>
             <Flex alignItems={"center"} gap={2} mt={2}>
-                <Text color={"gray.light"} fontSize={"sm"}>{postComments.length} comments</Text>
-                <Box w={1} h={1} borderRadius={"full"} bg={"gray.light"}></Box>
                 <Text color={"gray.light"} fontSize={"sm"}>{post.likes.length} likes</Text>
             </Flex>
         </>

@@ -32,7 +32,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                 return
             }
 
-            console.log(data)
             showToast("Success", "Post is created successfully.", "success")
             setPosts([data, ...posts])
             onClose()

@@ -1,17 +1,22 @@
 import { Avatar, Box, Button, Divider, Flex, Image, Spinner, Text } from "@chakra-ui/react"
 import Actions from "../components/Actions"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Comment from "../components/Comment"
 import { useEffect, useState } from "react"
 import useShowToast from "../hooks/useShowToast"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import postsAtom from "../atoms/postsAtom"
 import { formatDistanceToNow } from "date-fns"
 import commentsAtom from "../atoms/commentsAtom"
+import userAtom from "../atoms/userAtom"
+import { DeleteIcon } from "@chakra-ui/icons"
 
 const PostPage = () => {
   const { id } = useParams()
   const showToast = useShowToast()
+  const navigate = useNavigate()
+  const user = useRecoilValue(userAtom)
+  const [isLoading, setIsLoading] = useState(false)
   const [isPostLoading, setIsPostLoading] = useState(true)
   const [isCommentsLoading, setIsCommentsLoading] = useState(true)
   const [postUser, setPostUser] = useState(null)
@@ -89,6 +94,36 @@ const PostPage = () => {
     }
   }, [id, currentPost])
 
+  const handleDeletePost = async () => {
+    if(isLoading) return
+    setIsLoading(true)
+    try {
+      if(!currentPost) {
+        return
+      }
+      const res = await fetch(`/api/posts/delete/${currentPost._id}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" }
+      })
+      const data = await res.json()
+
+      if(data.error) {
+          showToast("Error", data.error, "error")
+          return
+      }
+
+      const deletePost = posts.filter((p) => p._id !== currentPost._id)
+      setPosts(deletePost)
+      showToast("Success", "Post is successfully deleted.", "success")
+      navigate(`/profile/${user?.username}`)
+        
+    } catch(error) {
+      showToast("Error", data.error, "error")
+    } finally {
+      setIsLoading(false)
+    }
+}
+
   if(!isPostLoading && !currentPost) {
     return (
       <Flex justifyContent={"center"}>
@@ -116,7 +151,12 @@ const PostPage = () => {
                   <Text fontSize={"sm"}>{postUser.username}</Text>
               </Flex>
           </Link>
-          <Text fontSize={"sm"}>{formatDistanceToNow(new Date(currentPost.createdAt))} ago</Text>
+          <Flex alignItems={"center"} gap={4}>
+            <Text fontSize={{ base: "xs", md: "sm" }}>{formatDistanceToNow(new Date(currentPost.createdAt))} ago</Text>
+            {user?._id === currentPost.postedBy && (
+                <DeleteIcon onClick={handleDeletePost} cursor={"pointer"} _hover={{ color: "red.500" }}/>
+            )}
+          </Flex>
       </Flex>
       <Box py={2} px={1}>
         {currentPost.desc}
@@ -147,7 +187,7 @@ const PostPage = () => {
           <Text fontSize={"lg"}>No one commented on this post yet.</Text>
         </Flex>
       )}
-
+      <Text fontSize={"lg"} mb={4}>Comments: {comments.length}</Text>
       {comments.map((comment) => (
         <Comment key={comment._id} comment={comment}/>
       ))}
